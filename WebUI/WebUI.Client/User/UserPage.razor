@@ -1,0 +1,26 @@
+﻿@page "/"
+@rendermode InteractiveWebAssembly
+
+@using Web.Contracts.User
+
+<HxButton Text="@AppRes.CreateUser" OnClick="HandleShowUserForm" Color="ThemeColor.Primary" />
+<HxGrid @ref="grid"
+		TItem="UserDto"
+		DataProvider="GetGridData"
+		SelectionEnabled="false"
+		PageSize="20"
+		Responsive="true">
+	<Columns>
+		<HxGridColumn HeaderText="@AppRes.FirstName" ItemTextSelector="item => item.FirstName" />
+		<HxGridColumn HeaderText="@AppRes.LastName" ItemTextSelector="item => item.LastName" />
+		<HxGridColumn HeaderText="@AppRes.Email" ItemTextSelector="item => item.Email" />
+		<HxGridColumn HeaderText="@AppRes.BirthDate" ItemTextSelector="item => item.BirthDate.ToLongDateString()" />
+		<HxGridColumn HeaderText="@AppRes.Nationality" ItemTextSelector="item => NationalityDisplayValue(item.Nationality)" />
+		<HxGridColumn HeaderText="" ItemCssClass="text-end" HeaderCssClass="text-end">
+			<ItemTemplate>
+				<HxButton Icon="@BootstrapIcon.Download" Color="ThemeColor.Primary" Tooltip="@AppRes.DownloadUserJson" OnClick="async () => await HandleDownloadUser(context.UserId)" />
+			</ItemTemplate>
+		</HxGridColumn>
+	</Columns>
+</HxGrid>
+<UserFormOffcanvas @ref="userFormOffcanvas" OnFormValidSubmit="RefreshDataAsync"/>

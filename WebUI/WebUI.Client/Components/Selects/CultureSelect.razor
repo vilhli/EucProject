@@ -1,0 +1,41 @@
+﻿@rendermode InteractiveWebAssembly
+@inject ILocalStorageService LocalStorageService
+@inject NavigationManager Navigation
+
+@using System.Globalization
+@using Blazored.LocalStorage
+@using WebUI.Client.Common
+
+<HxSelect 
+    TItem="CultureInfo"
+    TValue="CultureInfo"
+    Data="supportedCultures"
+    @bind-Value="selectedCulture"
+    @bind-Value:after="ApplySelectedCultureAsync"
+    Nullable="false"
+    TextSelector="@(x => x.DisplayName)" />
+
+@code {
+	private readonly CultureInfo[] supportedCultures =
+		[
+		new CultureInfo("en-US"),
+		new CultureInfo("cs-CZ"),
+	];
+
+	private CultureInfo? selectedCulture;
+
+	protected override void OnInitialized()
+	{
+		selectedCulture = CultureInfo.CurrentCulture;
+	}
+
+	private async Task ApplySelectedCultureAsync()
+	{
+		if (CultureInfo.CurrentCulture != selectedCulture)
+		{
+			await LocalStorageService.SetItemAsStringAsync(LocalStorageKeys.CultureKey, selectedCulture!.Name);
+
+			Navigation.NavigateTo(Navigation.Uri, forceLoad: true);
+		}
+	}
+}

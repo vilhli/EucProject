@@ -1,0 +1,34 @@
+﻿@using Blazored.FluentValidation
+@using Web.Contracts.User
+@using WebUI.Client.Components.Selects
+@using Web.Contracts.Common
+
+<HxOffcanvas @ref="offcanvas"
+			 Title="@AppRes.CreateUser"
+			 ShowCloseButton="true"
+			 OnClosed="ResetForm">
+	<BodyTemplate>
+		<div class="d-flex flex-column gap-3">
+			<EditForm Model="model" id="@formId" OnValidSubmit="HandleFormSubmit">
+				<FluentValidationValidator />
+				<HxInputText Label="@AppRes.FirstName" @bind-Value="@model.FirstName" />
+				<HxInputText Label="@AppRes.LastName" @bind-Value="@model.LastName" />
+				<HxInputText Label="@AppRes.IdentificationNumber" @bind-Value="@model.IdentificationNumber" @bind-Value:after="GetBirthDateFromIdNumber" Hint="@AppRes.IdentificationNumberFormat" />
+				<HxCheckbox Text="@AppRes.HasNoIdentificationNumber" @bind-Value="@model.HasIdentificationNumber" />
+				<HxInputDate Label="@AppRes.BirthDate" @bind-Value="@model.BirthDate" CalendarIcon="BootstrapIcon.Calendar" />
+				<GenderSelect @bind-Value="@model.Gender" />
+				<HxInputText Label="@AppRes.Email" @bind-Value="@model.Email" />
+				<NationalitySelect @bind-Value="@model.Nationality" />
+				<div class="d-flex flex-row gap-2">
+					<HxCheckbox Text="@AppRes.AllowGrpc" @bind-Value="@model.HasGrpc" />
+					<a href="https://cdn.patria.cz/Informace-o-zpracovani-osobnich-udaju.pdf" target="_blank">@AppRes.GrpcDetails</a>
+				</div>
+			</EditForm>
+		</div>
+	</BodyTemplate>
+	<FooterTemplate>
+		<HxSubmit Text="@AppRes.SendForm" FormId="@formId" Color="ThemeColor.Primary" />
+	</FooterTemplate>
+</HxOffcanvas>
+
+
